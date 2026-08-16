@@ -214,6 +214,31 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Final Call To Action */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <p className="eyebrow">READY TO GET STARTED?</p>
+
+          <h2>Find the government support you're eligible for.</h2>
+
+          <p>
+            Explore available schemes or check your eligibility to discover
+            benefits that match your needs.
+          </p>
+
+          <div className="cta-actions">
+            <Link className="cta-primary-button" to="/search">
+              Explore Schemes
+              <span>→</span>
+            </Link>
+
+            <Link className="cta-secondary-button" to="/eligibility">
+              Check Eligibility
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

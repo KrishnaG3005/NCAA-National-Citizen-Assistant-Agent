@@ -161,6 +161,59 @@ function Home() {
           ))}
         </div>
       </section>
+
+      {/* How It Works */}
+      <section className="how-it-works">
+        <div className="how-it-works-heading">
+          <p className="eyebrow">HOW IT WORKS</p>
+          <h2>Get the right government support in three simple steps</h2>
+          <p>
+            Find relevant schemes without navigating through complicated
+            government portals.
+          </p>
+        </div>
+
+        <div className="steps-grid">
+          <div className="step-card">
+            <div className="step-number">01</div>
+
+            <div className="step-icon">◎</div>
+
+            <h3>Tell us about yourself</h3>
+
+            <p>
+              Share basic information about your profile, needs, and
+              preferences.
+            </p>
+          </div>
+
+          <div className="step-card">
+            <div className="step-number">02</div>
+
+            <div className="step-icon">✓</div>
+
+            <h3>Check your eligibility</h3>
+
+            <p>
+              Our platform evaluates available criteria to identify schemes that
+              may match your profile.
+            </p>
+          </div>
+
+          <div className="step-card">
+            <div className="step-number">03</div>
+
+            <div className="step-icon">✦</div>
+
+            <h3>Discover your schemes</h3>
+
+            <p>
+              Explore personalized recommendations and view detailed scheme
+              information.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

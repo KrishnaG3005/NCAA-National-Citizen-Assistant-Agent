@@ -404,7 +404,114 @@
   color: #7c3aed;
 }
 
+/* ================================
+   How It Works Section
+   ================================ */
+
+.how-it-works {
+  padding: 80px 32px;
+  background: #f8fafc;
+  border: 1px solid #e5eaf2;
+  border-radius: 24px;
+}
+
+.how-it-works-heading {
+  max-width: 700px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.how-it-works-heading .eyebrow {
+  margin: 0 0 10px;
+}
+
+.how-it-works-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.how-it-works-heading p:last-child {
+  margin: 14px auto 0;
+  max-width: 600px;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* Three step cards */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.step-card {
+  position: relative;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+  border-color: #cbdaf0;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+}
+
+/* Step number */
+.step-number {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Step icon */
+.step-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  border-radius: 14px;
+  background: #eef4ff;
+  color: #0b3b91;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.step-card h3 {
+  margin: 0 0 10px;
+  color: #0f172a;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.step-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
 @media (max-width: 960px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-it-works {
+    padding: 56px 24px;
+  }
   .hero-grid,
   .two-column-grid,
   .dashboard-grid,
@@ -805,8 +912,6 @@
   left: -18px;
 }
 
-
-
 @media (max-width: 640px) {
   .app-main {
     width: min(100%, calc(100% - 20px));
@@ -847,10 +952,16 @@
   .ai-card {
     padding: 16px;
   }
+
+  .how-it-works {
+    padding: 44px 18px;
+    border-radius: 18px;
+  }
+
+  .step-card {
+    padding: 22px;
+  }
 }
-
-
-
 
 .stats-strip {
   display: grid;

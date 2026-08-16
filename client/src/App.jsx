@@ -12,6 +12,7 @@ import SavedSchemes from "./pages/SavedSchemes.jsx";
 import Eligibility from "./pages/Eligibility.jsx";
 import Profile from "./pages/Profile.jsx";
 import Admin from "./pages/Admin.jsx";
+import Chat from "./pages/Chat.jsx";
 import "./App.css";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/saved-schemes" element={<SavedSchemes />} />
             <Route path="/profile" element={<Profile />} />
           </Route>

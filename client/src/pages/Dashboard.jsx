@@ -23,10 +23,10 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="dashboard-grid">
+    <div className="dashboard-layout">
       <Sidebar />
 
-      <section className="page-shell stack">
+      <main className="page-shell stack">
         <div className="section-title">
           <p className="eyebrow">Dashboard</p>
           <h1>Welcome{user?.name ? `, ${user.name}` : ""}</h1>
@@ -66,7 +66,7 @@ function Dashboard() {
             View saved schemes
           </Link>
         </div>
-      </section>
+      </main>
     </div>
   );
 }

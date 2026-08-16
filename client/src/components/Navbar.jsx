@@ -1,65 +1,133 @@
 import { Link, NavLink } from "react-router-dom";
-import { APP_NAME } from "../utils/constants.js";
-import { useAuth } from "../contexts/AuthContext.jsx";
-
-const navItems = [
-  { label: "Home", to: "/" },
-  { label: "Search", to: "/search" },
-  { label: "Eligibility", to: "/eligibility" },
-  { label: "Dashboard", to: "/dashboard", protected: true },
-];
+import { Menu, X, MessageCircle, Search, UserCheck } from "lucide-react";
+import { useState } from "react";
+import { APP_NAME } from "../utils/constants";
+import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const navClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
 
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link className="brand" to="/">
-          <span className="brand-mark">{APP_NAME.slice(0, 1)}</span>
-          <span>
-            {APP_NAME}
-            <span className="helper-text"> citizen assistant</span>
-          </span>
+
+        {/* Logo */}
+        <Link to="/" className="brand" onClick={closeMenu}>
+          <div className="brand-mark">🏛️</div>
+
+          <div className="brand-text">
+            <h2>{APP_NAME}</h2>
+            <span>National Citizen Assistant</span>
+          </div>
         </Link>
 
-        <nav className="nav-links" aria-label="Primary">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
-              {item.label}
-            </NavLink>
-          ))}
+        {/* Mobile Menu Button */}
+        <button
+          className="menu-btn"
+          type="button"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((prev) => !prev)}
+        >
+          {menuOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
 
+        {/* Navigation */}
+        <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
+
+          {/* Home */}
+          <NavLink to="/" className={navClass} onClick={closeMenu}>
+            Home
+          </NavLink>
+
+          {/* Scheme Search */}
+          <NavLink
+            to="/schemes"
+            className={navClass}
+            onClick={closeMenu}
+          >
+            <Search size={17} />
+            <span>Schemes</span>
+          </NavLink>
+
+          {/* AI Assistant */}
+          <NavLink
+            to="/chat"
+            className={navClass}
+            onClick={closeMenu}
+          >
+            <MessageCircle size={17} />
+            <span>AI Assistant</span>
+          </NavLink>
+
+          {/* Eligibility */}
+          <NavLink
+            to="/eligibility"
+            className={navClass}
+            onClick={closeMenu}
+          >
+            <UserCheck size={17} />
+            <span>Eligibility</span>
+          </NavLink>
+
+          {/* Authenticated User */}
           {isAuthenticated ? (
             <>
               <NavLink
-                to="/profile"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                to="/dashboard"
+                className={navClass}
+                onClick={closeMenu}
               >
-                {user?.name || "Profile"}
+                Dashboard
               </NavLink>
-              <button type="button" onClick={logout}>
+
+              <NavLink
+                to="/profile"
+                className="profile-link"
+                onClick={closeMenu}
+              >
+                <div className="user-avatar">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+
+                <span>{user?.name || "Profile"}</span>
+              </NavLink>
+
+              <button
+                type="button"
+                className="logout-btn"
+                onClick={() => {
+                  logout();
+                  closeMenu();
+                }}
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
+              {/* Guest */}
               <NavLink
                 to="/login"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                className={navClass}
+                onClick={closeMenu}
               >
                 Login
               </NavLink>
-              <NavLink
+
+              <Link
                 to="/register"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                className="register-btn"
+                onClick={closeMenu}
               >
-                Register
-              </NavLink>
+                Get Started
+              </Link>
             </>
           )}
         </nav>

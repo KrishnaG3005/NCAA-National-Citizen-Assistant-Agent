@@ -1,10 +1,19 @@
 import { Link, NavLink } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 import { APP_NAME } from "../utils/constants.js";
 import { useAuth } from "../contexts/AuthContext.jsx";
 
 const navItems = [
   { label: "Home", to: "/" },
-  { label: "Search", to: "/search" },
+  {
+    label: (
+      <span className="nav-search">
+        <FiSearch size={17} />
+        <span>Search</span>
+      </span>
+    ),
+    to: "/search",
+  },
   { label: "Eligibility", to: "/eligibility" },
   { label: "Dashboard", to: "/dashboard", protected: true },
 ];
@@ -17,10 +26,8 @@ function Navbar() {
       <div className="site-header-inner">
         <Link className="brand" to="/">
           <span className="brand-mark">{APP_NAME.slice(0, 1)}</span>
-          <span>
-            {APP_NAME}
-            <span className="helper-text"> citizen assistant</span>
-          </span>
+
+          <span className="brand-name">{APP_NAME}</span>
         </Link>
 
         <nav className="nav-links" aria-label="Primary">
@@ -28,7 +35,9 @@ function Navbar() {
             <NavLink
               key={item.to}
               to={item.to}
-              className={({ isActive }) => (isActive ? "active" : undefined)}
+              className={({ isActive }) =>
+                isActive ? "active" : undefined
+              }
             >
               {item.label}
             </NavLink>
@@ -38,10 +47,13 @@ function Navbar() {
             <>
               <NavLink
                 to="/profile"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                className={({ isActive }) =>
+                  isActive ? "active" : undefined
+                }
               >
                 {user?.name || "Profile"}
               </NavLink>
+
               <button type="button" onClick={logout}>
                 Logout
               </button>
@@ -50,14 +62,14 @@ function Navbar() {
             <>
               <NavLink
                 to="/login"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
+                className={({ isActive }) =>
+                  isActive ? "active" : undefined
+                }
               >
                 Login
               </NavLink>
-              <NavLink
-                to="/register"
-                className={({ isActive }) => (isActive ? "active" : undefined)}
-              >
+
+              <NavLink to="/register" className="register-button">
                 Register
               </NavLink>
             </>

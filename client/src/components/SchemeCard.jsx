@@ -7,13 +7,18 @@ function SchemeCard({ scheme, saved = false, onSave, onRemove }) {
 
   return (
     <article className="scheme-card">
-      <div className="meta-row">
-        <span className="badge">{scheme.category}</span>
-        <span className="badge">{scheme.region}</span>
+      <div className="scheme-card-top">
+        <div className="scheme-card-badges">
+          <span className="scheme-category">{scheme.category}</span>
+          <span className="scheme-region">{scheme.region}</span>
+        </div>
+
+        <span className="scheme-arrow">↗</span>
       </div>
 
-      <div>
+      <div className="scheme-card-content">
         <h3>{scheme.title}</h3>
+
         <p className="card-copy">{scheme.summary}</p>
       </div>
 
@@ -25,11 +30,18 @@ function SchemeCard({ scheme, saved = false, onSave, onRemove }) {
         ))}
       </div>
 
-      <p className="scheme-meta">{scheme.eligibility}</p>
+      <div className="scheme-eligibility">
+        <span className="eligibility-label">ELIGIBILITY</span>
+        <p>{scheme.eligibility}</p>
+      </div>
 
       <div className="card-actions">
-        <Link className="primary-link" to={`/schemes/${scheme.id}`}>
+        <Link
+          className="primary-link"
+          to={`/schemes/${scheme.id}`}
+        >
           View details
+          <span>→</span>
         </Link>
 
         {saved ? (

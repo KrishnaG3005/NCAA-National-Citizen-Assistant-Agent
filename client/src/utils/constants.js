@@ -17,7 +17,12 @@ export const DEMO_SCHEMES = [
     eligibility: "Open to verified citizens and long-term residents.",
     benefits: ["Identity assistance", "Document tracking", "Profile support"],
     region: "National",
+
+    // Eligibility rules
+    minIncome: 0,
+    maxIncome: 1000000,
   },
+
   {
     id: "education-first",
     title: "Education First Assistance",
@@ -28,7 +33,13 @@ export const DEMO_SCHEMES = [
       "Students in approved institutions with household income limits.",
     benefits: ["Scholarships", "Fee waivers", "Mentorship"],
     region: "State + National",
+
+    // Eligibility rules
+    requiresStudent: true,
+    minIncome: 0,
+    maxIncome: 500000,
   },
+
   {
     id: "health-access",
     title: "Health Access Coverage",
@@ -38,7 +49,12 @@ export const DEMO_SCHEMES = [
     eligibility: "Income-qualified families, seniors, and vulnerable groups.",
     benefits: ["Coverage plans", "Hospital assistance", "Preventive care"],
     region: "National",
+
+    // Eligibility rules
+    maxIncome: 300000,
+    allowsSenior: true,
   },
+
   {
     id: "women-safety",
     title: "Women Safety Support",
@@ -49,7 +65,11 @@ export const DEMO_SCHEMES = [
       "Women and family support applicants needing urgent assistance.",
     benefits: ["24/7 support", "Counseling", "Emergency routing"],
     region: "National",
+
+    // Eligibility rules
+    maxIncome: 500000,
   },
+
   {
     id: "rural-boost",
     title: "Rural Growth Boost",
@@ -59,7 +79,11 @@ export const DEMO_SCHEMES = [
     eligibility: "Rural residents, farmers, and local entrepreneurs.",
     benefits: ["Business support", "Training", "Seed funding"],
     region: "State",
+
+    // Eligibility rules
+    maxIncome: 400000,
   },
+
   {
     id: "senior-care",
     title: "Senior Care Guarantee",
@@ -69,8 +93,10 @@ export const DEMO_SCHEMES = [
     eligibility: "Residents above the eligible senior age threshold.",
     benefits: ["Transport support", "Pension guidance", "Daily care"],
     region: "National",
+
+    // Eligibility rules
+    requiresSenior: true,
   },
 ];
-
 export const USER_STORAGE_KEY = "ncaa-auth";
 export const SAVED_SCHEMES_STORAGE_KEY = "ncaa-saved-schemes";

@@ -16,7 +16,6 @@ function Navbar() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-
         {/* Logo */}
         <Link to="/" className="brand" onClick={closeMenu}>
           <div className="brand-mark">🏛️</div>
@@ -40,38 +39,25 @@ function Navbar() {
 
         {/* Navigation */}
         <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
-
           {/* Home */}
           <NavLink to="/" className={navClass} onClick={closeMenu}>
             Home
           </NavLink>
 
           {/* Scheme Search */}
-          <NavLink
-            to="/schemes"
-            className={navClass}
-            onClick={closeMenu}
-          >
+          <NavLink to="/search" className={navClass} onClick={closeMenu}>
             <Search size={17} />
             <span>Schemes</span>
           </NavLink>
 
           {/* AI Assistant */}
-          <NavLink
-            to="/chat"
-            className={navClass}
-            onClick={closeMenu}
-          >
+          <NavLink to="/chat" className={navClass} onClick={closeMenu}>
             <MessageCircle size={17} />
             <span>AI Assistant</span>
           </NavLink>
 
           {/* Eligibility */}
-          <NavLink
-            to="/eligibility"
-            className={navClass}
-            onClick={closeMenu}
-          >
+          <NavLink to="/eligibility" className={navClass} onClick={closeMenu}>
             <UserCheck size={17} />
             <span>Eligibility</span>
           </NavLink>
@@ -79,11 +65,7 @@ function Navbar() {
           {/* Authenticated User */}
           {isAuthenticated ? (
             <>
-              <NavLink
-                to="/dashboard"
-                className={navClass}
-                onClick={closeMenu}
-              >
+              <NavLink to="/dashboard" className={navClass} onClick={closeMenu}>
                 Dashboard
               </NavLink>
 
@@ -113,19 +95,11 @@ function Navbar() {
           ) : (
             <>
               {/* Guest */}
-              <NavLink
-                to="/login"
-                className={navClass}
-                onClick={closeMenu}
-              >
+              <NavLink to="/login" className={navClass} onClick={closeMenu}>
                 Login
               </NavLink>
 
-              <Link
-                to="/register"
-                className="register-btn"
-                onClick={closeMenu}
-              >
+              <Link to="/register" className="register-btn" onClick={closeMenu}>
                 Get Started
               </Link>
             </>

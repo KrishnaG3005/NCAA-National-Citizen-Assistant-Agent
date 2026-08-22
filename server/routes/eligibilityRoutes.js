@@ -7,7 +7,7 @@ const router = express.Router();
 router.post(
   "/check",
   [
-    body("income")
+    body("annualIncome")
       .optional({ nullable: true })
       .isNumeric()
       .withMessage("Income must be numeric"),

@@ -9,12 +9,14 @@ function SchemeCard({ scheme, saved = false, onSave, onRemove }) {
     <article className="scheme-card">
       <div className="meta-row">
         <span className="badge">{scheme.category}</span>
-        <span className="badge">{scheme.region}</span>
+        <span className="badge">
+          {scheme.region || scheme.state || "National"}
+        </span>
       </div>
 
       <div>
         <h3>{scheme.title}</h3>
-        <p className="card-copy">{scheme.summary}</p>
+        <p className="card-copy">{scheme.summary || scheme.description}</p>
       </div>
 
       <div className="scheme-tags">

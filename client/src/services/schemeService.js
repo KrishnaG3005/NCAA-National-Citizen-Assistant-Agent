@@ -1,97 +1,71 @@
-import { DEMO_SCHEMES, SAVED_SCHEMES_STORAGE_KEY } from "../utils/constants.js";
+import apiClient from "../api/client.js";
 
-const safeStorage = () => {
-  if (typeof window === "undefined") {
-    return null;
-  }
+const normalizeScheme = (scheme) => ({
+  ...scheme,
+  id: scheme._id || scheme.id,
+  summary: scheme.description,
+  eligibility: `${scheme.state || "All states"} • ${
+    scheme.gender || "All applicants"
+  }`,
+  region: scheme.state || "National",
+  benefits:
+    typeof scheme.benefits === "string"
+      ? [scheme.benefits]
+      : scheme.benefits || [],
+});
 
-  return window.localStorage;
+const request = async (promise) => {
+  const { data } = await promise;
+  return data;
 };
 
-const readSavedIds = () => {
-  const storage = safeStorage();
+export const getSchemes = async () => {
+  const data = await request(apiClient.get("/api/schemes"));
+  return data.schemes.map(normalizeScheme);
+};
 
-  if (!storage) {
-    return [];
-  }
+export const getFeaturedSchemes = async () => (await getSchemes()).slice(0, 3);
 
+export const getSchemeById = async (schemeId) => {
   try {
-    const raw = storage.getItem(SAVED_SCHEMES_STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+    const data = await request(apiClient.get(`/api/schemes/${schemeId}`));
+    return normalizeScheme(data.scheme);
+  } catch (error) {
+    if (error.response?.status === 404) return null;
+    throw error;
   }
 };
-
-const writeSavedIds = (ids) => {
-  const storage = safeStorage();
-
-  if (!storage) {
-    return ids;
-  }
-
-  storage.setItem(SAVED_SCHEMES_STORAGE_KEY, JSON.stringify(ids));
-  return ids;
-};
-
-const normalizeQuery = (query = "") => query.trim().toLowerCase();
-
-const matchesScheme = (scheme, query) => {
-  if (!query) {
-    return true;
-  }
-
-  const searchable = [
-    scheme.title,
-    scheme.category,
-    scheme.summary,
-    scheme.eligibility,
-    scheme.region,
-    ...(scheme.benefits ?? []),
-  ]
-    .join(" ")
-    .toLowerCase();
-
-  return searchable.includes(query);
-};
-
-export const getSchemes = async () => DEMO_SCHEMES;
-
-export const getFeaturedSchemes = async () => DEMO_SCHEMES.slice(0, 3);
-
-export const getSchemeById = async (schemeId) =>
-  DEMO_SCHEMES.find((scheme) => scheme.id === schemeId) ?? null;
 
 export const searchSchemes = async (query = "") => {
-  const normalized = normalizeQuery(query);
-  return DEMO_SCHEMES.filter((scheme) => matchesScheme(scheme, normalized));
+  const data = await request(
+    apiClient.get("/api/schemes", { params: { q: query } })
+  );
+  return data.schemes.map(normalizeScheme);
 };
 
 export const getSavedSchemes = async () => {
-  const savedIds = readSavedIds();
-  return DEMO_SCHEMES.filter((scheme) => savedIds.includes(scheme.id));
+  const data = await request(apiClient.get("/api/schemes/saved"));
+  return data.savedSchemes.map((saved) => normalizeScheme(saved.schemeId));
 };
 
 export const saveScheme = async (schemeId) => {
-  const savedIds = readSavedIds();
-
-  if (!savedIds.includes(schemeId)) {
-    savedIds.push(schemeId);
-  }
-
-  writeSavedIds(savedIds);
+  await request(apiClient.post(`/api/schemes/${schemeId}/save`));
   return getSavedSchemes();
 };
 
 export const removeSavedScheme = async (schemeId) => {
-  const nextIds = readSavedIds().filter((id) => id !== schemeId);
-  writeSavedIds(nextIds);
+  await request(apiClient.delete(`/api/schemes/${schemeId}/save`));
   return getSavedSchemes();
 };
 
-export const isSchemeSaved = async (schemeId) =>
-  readSavedIds().includes(schemeId);
+export const isSchemeSaved = async (schemeId) => {
+  try {
+    return (await getSavedSchemes()).some((scheme) => scheme.id === schemeId);
+  } catch (error) {
+    if (error.response?.status === 401) return false;
+    throw error;
+  }
+};
 
 export default {
   getSchemes,

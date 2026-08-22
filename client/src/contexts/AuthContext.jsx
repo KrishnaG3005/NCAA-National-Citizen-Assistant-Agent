@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import {
   getStoredAuth,
   login as loginUser,
@@ -10,18 +10,10 @@ import {
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState({ token: null, user: null });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const storedAuth = getStoredAuth();
-
-    if (storedAuth) {
-      setAuthState(storedAuth);
-    }
-
-    setLoading(false);
-  }, []);
+  const [authState, setAuthState] = useState(
+    () => getStoredAuth() || { token: null, user: null }
+  );
+  const loading = false;
 
   const login = async (credentials) => {
     const nextAuth = await loginUser(credentials);
@@ -63,6 +55,7 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

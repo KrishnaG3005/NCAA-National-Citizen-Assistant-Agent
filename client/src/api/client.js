@@ -10,6 +10,21 @@ export const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  try {
+    const stored = JSON.parse(
+      window.localStorage.getItem("ncaa-auth") || "null"
+    );
+    if (stored?.token) {
+      config.headers.Authorization = `Bearer ${stored.token}`;
+    }
+  } catch {
+    // Ignore malformed local session data.
+  }
+
+  return config;
+});
+
 export const getApiBaseUrl = () => API_BASE_URL;
 
 export const fetchHealth = async () => {

@@ -1,28 +1,23 @@
-import { useMemo, useState } from "react";
-import { DEMO_SCHEMES } from "../utils/constants.js";
+import { useState } from "react";
+import { checkEligibility } from "../services/eligibilityService.js";
 
 function Eligibility() {
   const [profile, setProfile] = useState({
-    income: "",
-    senior: false,
-    student: false,
+    annualIncome: "",
+    age: "",
+    gender: "",
+    state: "",
+    category: "",
   });
+  const [eligibleSchemes, setEligibleSchemes] = useState([]);
+  const [checked, setChecked] = useState(false);
 
-  const eligibleSchemes = useMemo(() => {
-    const income = Number(profile.income || 0);
-
-    return DEMO_SCHEMES.filter((scheme) => {
-      if (scheme.category === "Education" && profile.student) {
-        return true;
-      }
-
-      if (scheme.category === "Welfare" && profile.senior) {
-        return true;
-      }
-
-      return income > 0 && income < 300000;
-    });
-  }, [profile]);
+  const handleCheck = async (event) => {
+    event.preventDefault();
+    const schemes = await checkEligibility(profile);
+    setEligibleSchemes(schemes);
+    setChecked(true);
+  };
 
   return (
     <section className="page-shell stack">
@@ -32,16 +27,16 @@ function Eligibility() {
       </div>
 
       <div className="two-column-grid">
-        <div className="info-card stack">
+        <form className="info-card stack" onSubmit={handleCheck}>
           <label className="form-row">
             <span className="label">Annual household income</span>
             <input
               type="number"
-              value={profile.income}
+              value={profile.annualIncome}
               onChange={(event) =>
                 setProfile((current) => ({
                   ...current,
-                  income: event.target.value,
+                  annualIncome: event.target.value,
                 }))
               }
               placeholder="250000"
@@ -49,46 +44,35 @@ function Eligibility() {
           </label>
 
           <label className="form-row">
-            <span className="label">
-              <input
-                type="checkbox"
-                checked={profile.student}
-                onChange={(event) =>
-                  setProfile((current) => ({
-                    ...current,
-                    student: event.target.checked,
-                  }))
-                }
-              />{" "}
-              Student
-            </span>
+            <span className="label">Age</span>
+            <input
+              type="number"
+              value={profile.age}
+              onChange={(event) =>
+                setProfile((current) => ({
+                  ...current,
+                  age: event.target.value,
+                }))
+              }
+            />
           </label>
-
-          <label className="form-row">
-            <span className="label">
-              <input
-                type="checkbox"
-                checked={profile.senior}
-                onChange={(event) =>
-                  setProfile((current) => ({
-                    ...current,
-                    senior: event.target.checked,
-                  }))
-                }
-              />{" "}
-              Senior citizen
-            </span>
-          </label>
-        </div>
+          <button className="auth-button" type="submit">
+            Check eligibility
+          </button>
+        </form>
 
         <div className="info-card stack">
           <h2>Suggested schemes</h2>
-          {eligibleSchemes.map((scheme) => (
-            <div key={scheme.id} className="panel">
-              <strong>{scheme.title}</strong>
-              <p>{scheme.eligibility}</p>
-            </div>
-          ))}
+          {checked &&
+            eligibleSchemes.map((scheme) => (
+              <div key={scheme._id || scheme.id} className="panel">
+                <strong>{scheme.title}</strong>
+                <p>{scheme.eligibility}</p>
+              </div>
+            ))}
+          {checked && eligibleSchemes.length === 0 && (
+            <p>No matching schemes found.</p>
+          )}
         </div>
       </div>
     </section>

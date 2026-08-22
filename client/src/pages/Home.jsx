@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar.jsx";
 import SchemeCard from "../components/SchemeCard.jsx";
-import { DEMO_SCHEMES, APP_NAME } from "../utils/constants.js";
+import { APP_NAME } from "../utils/constants.js";
+import { getFeaturedSchemes } from "../services/schemeService.js";
+import { useEffect, useState } from "react";
 
 function Home() {
-  const featuredSchemes = DEMO_SCHEMES.slice(0, 3);
+  const [featuredSchemes, setFeaturedSchemes] = useState([]);
+
+  useEffect(() => {
+    getFeaturedSchemes()
+      .then(setFeaturedSchemes)
+      .catch(() => setFeaturedSchemes([]));
+  }, []);
 
   return (
     <div className="page-grid">
@@ -40,8 +48,8 @@ function Home() {
               <span className="badge">Save favorites</span>
             </div>
             <p>
-              The client is scaffolded to grow with your API, while still
-              working with friendly local demo data during development.
+              Search the schemes published by the NCAA service and save the ones
+              that fit your needs.
             </p>
           </div>
 

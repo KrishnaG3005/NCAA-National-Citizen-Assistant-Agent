@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Name is required"],
       trim: true,
     },
+
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -15,68 +16,82 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
       select: false,
     },
+
     phone: {
       type: String,
       trim: true,
     },
+
     state: {
       type: String,
       trim: true,
     },
+
     district: {
       type: String,
       trim: true,
     },
+
     gender: {
       type: String,
       trim: true,
     },
+
     dob: {
       type: Date,
     },
+
     occupation: {
       type: String,
       trim: true,
     },
+
     annualIncome: {
       type: Number,
       default: 0,
       min: 0,
     },
+
     category: {
       type: String,
       trim: true,
     },
+
     savedSchemes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "SavedScheme",
+        ref: "Scheme",
       },
     ],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-userSchema.pre("save", async function (next) {
+// Hash password before saving
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
+// Compare password
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.password);
 };
 
+// Remove password from JSON response
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;

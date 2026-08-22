@@ -1,113 +1,57 @@
+import apiClient from "../api/client.js";
 import { USER_STORAGE_KEY } from "../utils/constants.js";
 
-const safeStorage = () => {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  return window.localStorage;
-};
-
 const readAuth = () => {
-  const storage = safeStorage();
-
-  if (!storage) {
-    return null;
-  }
-
   try {
-    const raw = storage.getItem(USER_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
   } catch {
     return null;
   }
 };
 
 const writeAuth = (auth) => {
-  const storage = safeStorage();
-
-  if (!storage) {
-    return auth;
-  }
-
-  storage.setItem(USER_STORAGE_KEY, JSON.stringify(auth));
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(auth));
   return auth;
 };
 
-const clearAuth = () => {
-  const storage = safeStorage();
-
-  if (!storage) {
-    return;
+const request = async (promise) => {
+  try {
+    const { data } = await promise;
+    return data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Request failed. Please try again.",
+      { cause: error }
+    );
   }
-
-  storage.removeItem(USER_STORAGE_KEY);
 };
-
-const buildUser = ({
-  email = "citizen@example.com",
-  name,
-  role = "citizen",
-}) => ({
-  id: email,
-  name: name || email.split("@")[0].replace(/[._-]/g, " ") || "Citizen",
-  email,
-  role,
-});
 
 export const getStoredAuth = () => readAuth();
 
-export const login = async ({ email, password }) => {
-  if (!email || !password) {
-    throw new Error("Email and password are required.");
-  }
-
-  const role = email.toLowerCase().includes("admin") ? "admin" : "citizen";
-  const auth = {
-    token: "demo-token",
-    user: buildUser({ email, role }),
-  };
-
-  return writeAuth(auth);
+export const login = async (credentials) => {
+  const data = await request(apiClient.post("/api/auth/login", credentials));
+  return writeAuth({ token: data.token, user: data.user });
 };
 
-export const register = async ({ name, email, password }) => {
-  if (!name || !email || !password) {
-    throw new Error("Name, email, and password are required.");
-  }
-
-  const auth = {
-    token: "demo-token",
-    user: buildUser({ name, email, role: "citizen" }),
-  };
-
-  return writeAuth(auth);
+export const register = async (payload) => {
+  const data = await request(apiClient.post("/api/auth/register", payload));
+  return writeAuth({ token: data.token, user: data.user });
 };
 
 export const logout = async () => {
-  clearAuth();
+  localStorage.removeItem(USER_STORAGE_KEY);
   return true;
 };
 
 export const updateProfile = async (updates = {}) => {
-  const current = readAuth();
-
-  if (!current?.user) {
-    throw new Error("No active session found.");
-  }
-
-  const next = {
-    ...current,
-    user: {
-      ...current.user,
-      ...updates,
-    },
-  };
-
-  return writeAuth(next);
+  const data = await request(apiClient.put("/api/auth/profile", updates));
+  return writeAuth({ ...readAuth(), user: data.user });
 };
 
-export const getCurrentUser = async () => readAuth()?.user ?? null;
+export const getCurrentUser = async () => {
+  const data = await request(apiClient.get("/api/auth/me"));
+  return data.user;
+};
 
 export default {
   getStoredAuth,

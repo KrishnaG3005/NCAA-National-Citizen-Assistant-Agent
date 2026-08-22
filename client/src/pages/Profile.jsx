@@ -6,13 +6,21 @@ function Profile() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({
     name: user?.name || "",
-    email: user?.email || "",
+    phone: user?.phone || "",
+    state: user?.state || "",
+    district: user?.district || "",
+    occupation: user?.occupation || "",
+    annualIncome: user?.annualIncome || 0,
   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await updateUser(form);
-    toast.success("Profile updated.");
+    try {
+      await updateUser(form);
+      toast.success("Profile updated.");
+    } catch (error) {
+      toast.error(error.message || "Unable to update profile.");
+    }
   };
 
   return (
@@ -33,7 +41,7 @@ function Profile() {
           <strong>Email:</strong> {user?.email}
         </p>
         <p>
-          <strong>Role:</strong> {user?.role}
+          <strong>State:</strong> {user?.state || "Not set"}
         </p>
       </div>
 
@@ -50,12 +58,12 @@ function Profile() {
         </label>
 
         <label className="form-row">
-          <span className="label">Email</span>
+          <span className="label">Phone</span>
           <input
-            type="email"
-            value={form.email}
+            type="tel"
+            value={form.phone}
             onChange={(event) =>
-              setForm((current) => ({ ...current, email: event.target.value }))
+              setForm((current) => ({ ...current, phone: event.target.value }))
             }
           />
         </label>
